@@ -33,6 +33,7 @@
     "next-auth": "^4.23.2",
     "react": "^18",
     "react-dom": "^18",
+    "recharts": "^2.9.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "3.21.4"
