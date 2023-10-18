@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Category } from "@/lib/db/schema/categories"
-import { CategoryComboBox } from "./categories-combo-box"
+import { CategoryComboBox } from "@/components/expense-crud/categories-combo-box"
 import { cn } from "@/lib/utils"
+import { DatePicker } from "@/components/date-picker"
 
 const formSchema = insertExpenseSchema
 
@@ -30,6 +31,7 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
     defaultValues: {
       description: "",
       price: 0,
+      date: new Date(),
     },
   })
 
@@ -43,7 +45,21 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 rounded-lg border p-4 shadow-lg"
       >
-        <h2 className="text-xl font-bold">New Expense</h2>
+        <div className="flex flex-row items-center justify-between">
+          <h2 className="text-xl font-bold">New Expense</h2>
+
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <DatePicker date={field.value} setDate={field.onChange} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
