@@ -23,12 +23,14 @@ type CategoryComboBoxProps = {
   categories: Category[]
   categoryId: Category["id"] | null
   setCategoryId: (id: Category["id"] | null) => void
+  className?: string
 }
 
 export function CategoryComboBox({
   categories,
   categoryId,
   setCategoryId,
+  className,
 }: CategoryComboBoxProps) {
   const [open, setOpen] = useState(false)
 
@@ -49,7 +51,7 @@ export function CategoryComboBox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className={cn(className, "w-full justify-between")}
         >
           {categoryId
             ? categories.find((category) => category.id === categoryId)

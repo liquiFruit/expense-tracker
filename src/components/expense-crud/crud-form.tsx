@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Category } from "@/lib/db/schema/categories"
 import { CategoryComboBox } from "./categories-combo-box"
+import { cn } from "@/lib/utils"
 
 const formSchema = insertExpenseSchema
 
@@ -47,12 +48,16 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         <FormField
           control={form.control}
           name="description"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
 
               <FormControl>
-                <Input placeholder="Drinks with Mat" {...field} />
+                <Input
+                  className={cn(error && "border-destructive")}
+                  placeholder="Drinks with Mat"
+                  {...field}
+                />
               </FormControl>
 
               <FormMessage />
@@ -63,12 +68,13 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         <FormField
           control={form.control}
           name="price"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormItem>
               <FormLabel>Price in Rands</FormLabel>
 
               <FormControl>
                 <Input
+                  className={cn(error && "border-destructive")}
                   placeholder="R100,50"
                   type="number"
                   {...field}
@@ -84,12 +90,13 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         <FormField
           control={form.control}
           name="categoryId"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
 
               <FormControl>
                 <CategoryComboBox
+                  className={cn(error && "border-destructive")}
                   categories={props.categories}
                   categoryId={field.value}
                   setCategoryId={field.onChange}
