@@ -1,9 +1,15 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { insertExpenseSchema, NewExpense } from "@/lib/db/schema/expenses"
 import { zodResolver } from "@hookform/resolvers/zod"
 
+import { insertExpenseSchema, NewExpense } from "@/lib/db/schema/expenses"
+import { Category } from "@/lib/db/schema/categories"
+import { createExpense } from "@/lib/api/expenses/mutations"
+import { cn } from "@/lib/utils"
+
+import { CategoryComboBox } from "@/components/expense-crud/categories-combo-box"
+import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -14,10 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Category } from "@/lib/db/schema/categories"
-import { CategoryComboBox } from "@/components/expense-crud/categories-combo-box"
-import { cn } from "@/lib/utils"
-import { DatePicker } from "@/components/date-picker"
+import { toast } from "@/components/ui/use-toast"
 
 const formSchema = insertExpenseSchema
 
@@ -35,8 +38,20 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
     },
   })
 
-  function onSubmit(values: NewExpense) {
-    console.table(values)
+  async function onSubmit(newExpense: NewExpense) {
+    const { error } = await createExpense(newExpense)
+
+    if (error) {
+      toast({ title: "An error occured!", description: error })
+    } else {
+      form.reset()
+
+      toast({
+        title: "Success!",
+        description: "Successfully created your expense.",
+        className: "bg-primary text-white",
+      })
+    }
   }
 
   return (
