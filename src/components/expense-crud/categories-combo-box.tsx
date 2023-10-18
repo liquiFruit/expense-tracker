@@ -19,9 +19,18 @@ import {
 } from "@/components/ui/popover"
 import type { Category } from "@/lib/db/schema/categories"
 
-export function CategoryComboBox({ categories }: { categories: Category[] }) {
+type CategoryComboBoxProps = {
+  categories: Category[]
+  categoryId: Category["id"] | null
+  setCategoryId: (id: Category["id"] | null) => void
+}
+
+export function CategoryComboBox({
+  categories,
+  categoryId,
+  setCategoryId,
+}: CategoryComboBoxProps) {
   const [open, setOpen] = useState(false)
-  const [categoryId, setCategoryId] = useState<Category["id"] | null>(null)
 
   function updateSelected(newCategoryDescription: Category["description"]) {
     const newId = categories.find(

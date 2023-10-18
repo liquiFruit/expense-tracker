@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Category } from "@/lib/db/schema/categories"
+import { CategoryComboBox } from "./categories-combo-box"
 
 const formSchema = insertExpenseSchema
 
@@ -27,7 +28,6 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: "",
-      categoryId: 1,
       price: 0,
     },
   })
@@ -65,15 +65,34 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Price in Rands</FormLabel>
 
               <FormControl>
                 <Input
-                  className="text-center"
-                  placeholder="R100.50"
+                  placeholder="R100,50"
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+
+              <FormControl>
+                <CategoryComboBox
+                  categories={props.categories}
+                  categoryId={field.value}
+                  setCategoryId={field.onChange}
                 />
               </FormControl>
 
