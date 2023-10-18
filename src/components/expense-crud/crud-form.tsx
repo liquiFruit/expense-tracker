@@ -61,7 +61,7 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         className="space-y-8 rounded-lg border p-4 shadow-lg"
       >
         <div className="flex flex-row items-center justify-between">
-          <h2 className="text-xl font-bold">New Expense</h2>
+          <h2>New Expense</h2>
 
           <FormField
             control={form.control}

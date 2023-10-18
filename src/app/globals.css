@@ -40,3 +40,7 @@
 main {
   @apply px-4
 }
+
+h2 {
+  @apply text-xl font-bold
+}
