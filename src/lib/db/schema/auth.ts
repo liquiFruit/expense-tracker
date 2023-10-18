@@ -1,5 +1,7 @@
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "@auth/core/adapters"
+import { relations } from "drizzle-orm"
+import { expenses } from "./expenses"
 
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -8,6 +10,10 @@ export const users = sqliteTable("user", {
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
 })
+
+export const userRelations = relations(users, ({ many }) => ({
+  expenses: many(expenses),
+}))
 
 export const accounts = sqliteTable(
   "account",
