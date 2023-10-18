@@ -47,10 +47,10 @@ export function Chart() {
   ]
 
   return (
-    <div className="m-4 p-4 border border-primary bg-primary/5 rounded-md shadow-lg">
+    <div className="my-4 rounded-md border border-primary bg-primary/5 p-4 shadow-lg">
       <div>
         <p className="text-sm">Week total:</p>
-        <p className="font-bold text-xl">R15,505.50</p>
+        <p className="text-xl font-bold">R15,505.50</p>
         <p className="text-md text-rose-400">+201.5%</p>
       </div>
 

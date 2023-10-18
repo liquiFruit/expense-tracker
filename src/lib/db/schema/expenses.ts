@@ -37,9 +37,13 @@ export const expensesRelations = relations(expenses, ({ one, many }) => ({
 }))
 
 // Schema for CRUD - used to validate API requests
-export const insertExpenseSchema = createInsertSchema(expenses).omit({
-  userId: true,
-})
+export const insertExpenseSchema = createInsertSchema(expenses)
+  .extend({
+    description: z.string().min(1),
+  })
+  .omit({
+    userId: true,
+  })
 export const selectExpenseSchema = createSelectSchema(expenses)
 export const expenseIdSchema = selectExpenseSchema.pick({ id: true })
 export const updateExpenseSchema = selectExpenseSchema

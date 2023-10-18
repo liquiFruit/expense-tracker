@@ -35,3 +35,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+main {
+  @apply px-4
+}
