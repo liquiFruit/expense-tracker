@@ -1,12 +1,12 @@
 import { Chart } from "@/components/chart"
-import { CreateExpenseForm } from "@/components/create-expense-form"
+import { ExpenseCrud } from "@/components/expense-crud"
 
 export default async function Home() {
   return (
     <main>
       <Chart />
 
-      <CreateExpenseForm />
+      <ExpenseCrud />
     </main>
   )
 }

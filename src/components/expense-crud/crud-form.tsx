@@ -14,10 +14,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Category } from "@/lib/db/schema/categories"
 
 const formSchema = insertExpenseSchema
 
-export function CreateExpenseForm() {
+type ExpenseCrudFormProps = {
+  categories: Category[]
+}
+
+export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
   const form = useForm<NewExpense>({
     resolver: zodResolver(formSchema),
     defaultValues: {
