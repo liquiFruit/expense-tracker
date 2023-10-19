@@ -1,5 +1,6 @@
 "use client"
 
+import { useExpenseStore } from "@/lib/stores/expenseStore"
 import {
   LineChart,
   Line,
@@ -15,6 +16,8 @@ import {
 } from "recharts/types/component/DefaultTooltipContent"
 
 export function Chart() {
+  const expenses = useExpenseStore((state) => state.expenses)
+
   const data = [
     {
       day: "Mon",
@@ -41,8 +44,14 @@ export function Chart() {
       amount: 550,
     },
     {
-      day: "Sun",
-      amount: 200,
+      day: expenses.size,
+      amount:
+        expenses.size !== 0
+          ? [...expenses.values()].reduce((initial, next) => ({
+              ...initial,
+              price: initial.price + next.price,
+            })).price
+          : 0,
     },
   ]
 

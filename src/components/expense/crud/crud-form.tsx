@@ -8,7 +8,7 @@ import { Category } from "@/lib/db/schema/categories"
 import { createExpense } from "@/lib/api/expenses/mutations"
 import { cn } from "@/lib/utils"
 
-import { CategoryComboBox } from "@/components/expense-crud/categories-combo-box"
+import { CategoryComboBox } from "@/components/expense/crud/categories-combo-box"
 import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import { useExpenseStore } from "@/lib/stores/expenseStore"
 
 const formSchema = insertExpenseSchema
 
@@ -30,6 +31,8 @@ type ExpenseCrudFormProps = {
 }
 
 export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
+  const updateExpense = useExpenseStore((state) => state.updateExpense)
+
   const { refresh } = useRouter()
 
   const form = useForm<NewExpense>({
@@ -42,9 +45,9 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
   })
 
   async function onSubmit(newExpense: NewExpense) {
-    const { error } = await createExpense(newExpense)
+    const { error, expense } = await createExpense(newExpense)
 
-    if (error) {
+    if (error || !expense) {
       toast({ title: "An error occured!", description: error })
     } else {
       form.reset()
@@ -55,7 +58,8 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         className: "bg-primary text-white",
       })
 
-      refresh()
+      // refresh()
+      updateExpense(expense.id, expense)
     }
   }
 
