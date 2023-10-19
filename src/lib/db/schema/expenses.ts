@@ -37,9 +37,22 @@ export const expensesRelations = relations(expenses, ({ one, many }) => ({
 }))
 
 // Schema for CRUD - used to validate API requests
-export const insertExpenseSchema = createInsertSchema(expenses).omit({
-  userId: true,
-})
+export const insertExpenseSchema = createInsertSchema(expenses)
+  .extend({
+    description: z
+      .string({ required_error: "Required" })
+      .nonempty({ message: "Required" }),
+    price: z
+      .number({
+        invalid_type_error:
+          "Price must be a number, with a comma as the decimal separator",
+      })
+      .positive({ message: "Price must be greater than R0" }),
+    categoryId: z.number({ invalid_type_error: "Required" }),
+  })
+  .omit({
+    userId: true,
+  })
 export const selectExpenseSchema = createSelectSchema(expenses)
 export const expenseIdSchema = selectExpenseSchema.pick({ id: true })
 export const updateExpenseSchema = selectExpenseSchema
