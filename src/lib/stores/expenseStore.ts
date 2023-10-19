@@ -1,13 +1,13 @@
 import { create } from "zustand"
 import type { Expense } from "../db/schema/expenses"
 
-interface ExpenseState {
+export interface ExpenseStoreState {
   expenses: Map<Expense["id"], Expense>
   updateExpense: (id: Expense["id"], exp: Expense) => void
   resetExpenses: (exps: Expense[]) => void
 }
 
-export const useExpenseStore = create<ExpenseState>((set) => ({
+export const useExpenseStore = create<ExpenseStoreState>((set) => ({
   expenses: new Map(),
   updateExpense(id, exp) {
     set((state) => {

@@ -14,18 +14,20 @@ import {
 } from "@/components/ui/popover"
 
 import DefaultImage from "@/../public/default_img.png"
+import Link from "next/link"
+import { Separator } from "../ui/separator"
 
 export function Navbar() {
   const { data: session, status } = useSession()
 
   return (
-    <nav className="flex flex-row justify-between items-center p-4 shadow">
+    <nav className="flex flex-row items-center justify-between p-4 shadow">
       <Logo />
 
       {status === "authenticated" && session && session.user ? (
         <Popover>
           <PopoverTrigger>
-            <div className="relative overflow-hidden w-8 aspect-square rounded-full border-2 border-primary">
+            <div className="relative aspect-square w-8 overflow-hidden rounded-full border-2 border-primary">
               <Image
                 alt="User profile pic"
                 src={session.user.image || DefaultImage.src}
@@ -34,7 +36,14 @@ export function Navbar() {
               />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="flex flex-col w-48 mt-4">
+
+          <PopoverContent className="mt-4 flex w-48 flex-col gap-2">
+            <Button variant={"outline"} size={"sm"} asChild>
+              <Link href={"/dashboard"}>Dashboard</Link>
+            </Button>
+
+            <Separator />
+
             <Button
               variant={"destructive"}
               size={"sm"}

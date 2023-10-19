@@ -1,6 +1,5 @@
 "use client"
 
-import type { Expense } from "@/lib/db/schema/expenses"
 import { useExpenseStore } from "@/lib/stores/expenseStore"
 import { humanDate } from "@/lib/utils"
 
@@ -10,10 +9,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
-export function ExpenseList(props: { expenses: Expense[] }) {
-  const resetExpenses = useExpenseStore((state) => state.resetExpenses)
-
-  resetExpenses(props.expenses)
+export function ExpenseList() {
+  const { resetExpenses, expenses } = useExpenseStore((state) => ({
+    resetExpenses: state.resetExpenses,
+    expenses: [...state.expenses.values()],
+  }))
 
   return (
     <section className="my-4 mb-96">
@@ -23,14 +23,17 @@ export function ExpenseList(props: { expenses: Expense[] }) {
         </CollapsibleTrigger>
 
         <CollapsibleContent>
-          {!props.expenses ? (
+          {!expenses ? (
             <p className="text-center">An error occured!</p>
-          ) : props.expenses.length === 0 ? (
+          ) : expenses.length === 0 ? (
             <p className="text-center">No expenses yet.</p>
           ) : (
             <div className="flex flex-col gap-4">
-              {props.expenses.map((exp, i) => (
-                <div className="flex items-center justify-between space-x-4 rounded-md border p-4">
+              {expenses.map((exp, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between space-x-4 rounded-md border p-4"
+                >
                   <div className="flex flex-col">
                     <span className="text-lg font-medium">
                       {exp.description}
