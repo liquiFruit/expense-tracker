@@ -11,6 +11,8 @@ export const getExpenses = async () => {
 }
 
 export const getExpensesByUser = async () => {
+  console.log(`>> GET USER EXPENSES ${Date.now()}`)
+
   // Check user auth
   const { session } = await getUserAuth()
   if (!session) return { error: "Unauthorised" }
