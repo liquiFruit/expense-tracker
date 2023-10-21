@@ -32,7 +32,10 @@ export default async function Home() {
             ) : (
               <div className="flex flex-col gap-4">
                 {expenses.map((exp, i) => (
-                  <div className="flex items-center justify-between space-x-4 rounded-md border p-4">
+                  <div
+                    key={i}
+                    className="flex items-center justify-between space-x-4 rounded-md border p-4"
+                  >
                     <div className="flex flex-col">
                       <span className="text-lg font-medium">
                         {exp.description}

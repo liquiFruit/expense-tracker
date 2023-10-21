@@ -81,7 +81,7 @@ function TooltipComponent(datum: TooltipProps<ValueType, NameType> | null) {
   const amount = datum.payload[0].value
 
   return (
-    <div className="rounded bg-background p-2 drop-shadow">
+    <div className="rounded bg-background p-2 shadow">
       <span className="mr-2 font-semibold">{day}:</span>R
       {(amount as Number).toFixed(2)}
     </div>
