@@ -16,18 +16,15 @@ export function ExpenseList({
 }: {
   initialExpenses?: Awaited<ReturnType<typeof getExpensesByUser>>
 }) {
-  const { data } = useQuery({
+  const query = useQuery({
     queryKey: ["expenses"],
-    queryFn: async () => {
-      console.log("fetching from expense-list")
-      return getExpensesByUser()
-    },
+    queryFn: getExpensesByUser,
     initialData: initialExpenses,
     refetchOnMount: false,
     refetchOnReconnect: false,
   })
 
-  const { error, expenses } = data ?? { error: "UseQuery Error" }
+  const { error, expenses } = query.data!
 
   return (
     <section className="my-4 mb-96">
