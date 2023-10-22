@@ -19,11 +19,12 @@ function randomCoordinates(percent: number) {
 
 export default async function Home() {
   return (
-    <main className="my-16 flex h-96 flex-col items-center justify-center">
-      <h1 className="w-fit text-3xl font-black underline decoration-primary">
+    <main className="my-16">
+      <h1 className="text-center text-3xl font-black underline decoration-primary">
         Track Every Penny
       </h1>
-      <div className="relative aspect-square w-full animate-[spin_10s_linear_infinite]">
+
+      <div className="relative mx-auto aspect-square w-full max-w-xs animate-[spin_10s_linear_infinite]">
         <div className={classes} style={randomCoordinates(0)}>
           <BadgeDollarSignIcon
             size={50}
@@ -52,7 +53,8 @@ export default async function Home() {
           />
         </div>
       </div>
-      <Button className="w-full max-w-xs" asChild>
+
+      <Button className="mx-auto block w-full max-w-xs text-center" asChild>
         <Link href={"/dashboard"}>Get Started</Link>
       </Button>
     </main>

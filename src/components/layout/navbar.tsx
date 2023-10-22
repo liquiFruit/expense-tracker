@@ -36,7 +36,7 @@ export function Navbar() {
             </div>
           </PopoverTrigger>
           <PopoverContent className="mt-4 flex w-48 flex-col gap-4">
-            <Button variant={"outline"} size={"sm"}>
+            <Button variant={"outline"} size={"sm"} asChild>
               <Link href={"/dashboard"}>Dashboard</Link>
             </Button>
 
