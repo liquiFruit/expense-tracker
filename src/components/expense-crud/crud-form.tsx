@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
-import { useRouter } from "next/navigation"
+import { useExpenses } from "@/lib/hooks/queries"
 
 const formSchema = insertExpenseSchema
 
@@ -30,7 +30,7 @@ type ExpenseCrudFormProps = {
 }
 
 export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
-  const { refresh } = useRouter()
+  const { refetch } = useExpenses()
 
   const form = useForm<NewExpense>({
     resolver: zodResolver(formSchema),
@@ -55,7 +55,7 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         className: "bg-primary text-white",
       })
 
-      refresh()
+      refetch()
     }
   }
 

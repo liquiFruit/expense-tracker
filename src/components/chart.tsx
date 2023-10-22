@@ -1,5 +1,7 @@
 "use client"
 
+import { useExpenses } from "@/lib/hooks/queries"
+import { format, isBefore, isToday, startOfDay, subDays } from "date-fns"
 import {
   LineChart,
   Line,
@@ -15,36 +17,43 @@ import {
 } from "recharts/types/component/DefaultTooltipContent"
 
 export function Chart() {
-  const data = [
-    {
-      day: "Mon",
-      amount: 350,
-    },
-    {
-      day: "Tues",
-      amount: 50,
-    },
-    {
-      day: "Wed",
-      amount: 200,
-    },
-    {
-      day: "Thurs",
-      amount: 50,
-    },
-    {
-      day: "Fri",
-      amount: 100,
-    },
-    {
-      day: "Sat",
-      amount: 550,
-    },
-    {
-      day: "Sun",
-      amount: 200,
-    },
-  ]
+  const query = useExpenses()
+
+  if (query.isLoading || query.isFetching || query.isRefetching)
+    return "loading..."
+
+  if (query.error || !query.data || query.data.error || !query.data.expenses)
+    return "An error occured while fetching the data"
+
+  const today = startOfDay(new Date())
+  const ONE_WEEK_AGO = subDays(today, 6)
+  const totals = new Map<number, { purchases: number; amount: number }>()
+
+  for (var i = 0; i < 7; i++) {
+    totals.set(startOfDay(subDays(today, i)).getTime(), {
+      amount: 0,
+      purchases: 0,
+    })
+  }
+
+  query.data.expenses.forEach((exp) => {
+    if (isBefore(exp.date, ONE_WEEK_AGO)) return
+
+    const day = startOfDay(exp.date)
+    const previous = totals.get(day.getTime())!
+
+    totals.set(day.getTime(), {
+      amount: previous.amount + exp.price,
+      purchases: previous.purchases + 1,
+    })
+  })
+
+  const data = [...totals]
+    .sort((first, second) => first[0] - second[0])
+    .map(([day, totals]) => ({
+      day: isToday(day) ? "Today" : format(day, "EEE"),
+      totals,
+    }))
 
   return (
     <div className="my-4 rounded-md border border-primary bg-primary/5 p-4 shadow-lg">
@@ -56,7 +65,11 @@ export function Chart() {
 
       <ResponsiveContainer aspect={16 / 9} width="100%" className="">
         <LineChart data={data} className="">
-          <Line type="monotone" dataKey="amount" stroke="hsl(var(--primary))" />
+          <Line
+            type="monotone"
+            dataKey="totals.amount"
+            stroke="hsl(var(--primary))"
+          />
 
           <Tooltip label="test" content={<TooltipComponent />} />
 
