@@ -8,7 +8,7 @@ import { Category } from "@/lib/db/schema/categories"
 import { createExpense } from "@/lib/api/expenses/mutations"
 import { cn } from "@/lib/utils"
 
-import { CategoryComboBox } from "@/components/expense-crud/categories-combo-box"
+import { ComboBox } from "@/components/ui/combo-box"
 import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
 import {
@@ -131,11 +131,12 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
               <FormLabel>Category</FormLabel>
 
               <FormControl>
-                <CategoryComboBox
+                <ComboBox
                   className={cn(error && "border-destructive")}
-                  categories={props.categories}
-                  categoryId={field.value}
-                  setCategoryId={field.onChange}
+                  items={props.categories}
+                  itemId={field.value}
+                  setItemId={field.onChange}
+                  getLabel={(item) => item.description}
                 />
               </FormControl>
 

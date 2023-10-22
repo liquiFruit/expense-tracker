@@ -17,30 +17,31 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import type { Category } from "@/lib/db/schema/categories"
 
-type CategoryComboBoxProps = {
-  categories: Category[]
-  categoryId: Category["id"] | null
-  setCategoryId: (id: Category["id"] | null) => void
+type Item = { id: any }
+type ComboBoxProps<T extends Item> = {
+  items: T[]
+  itemId: T["id"] | null
+  setItemId: (id: T["id"] | null) => void
+  getLabel: (item: T) => string
   className?: string
 }
 
-export function CategoryComboBox({
-  categories,
-  categoryId,
-  setCategoryId,
+export function ComboBox<T extends Item>({
+  items,
+  itemId,
+  setItemId,
   className,
-}: CategoryComboBoxProps) {
+  getLabel,
+}: ComboBoxProps<T>) {
   const [open, setOpen] = useState(false)
 
-  function updateSelected(newCategoryDescription: Category["description"]) {
-    const newId = categories.find(
-      (category) =>
-        category.description.toLowerCase() === newCategoryDescription
+  function updateSelected(newLabel: ReturnType<ComboBoxProps<T>["getLabel"]>) {
+    const newId = items.find(
+      (item) => getLabel(item).toLowerCase() === newLabel
     )?.id
 
-    setCategoryId(!newId || newId === categoryId ? null : newId)
+    setItemId(!newId || newId === itemId ? null : newId)
     setOpen(false)
   }
 
@@ -53,33 +54,30 @@ export function CategoryComboBox({
           aria-expanded={open}
           className={cn(className, "w-full justify-between")}
         >
-          {categoryId
-            ? categories.find((category) => category.id === categoryId)
-                ?.description
-            : "Select a category..."}
+          {itemId && items.find((item) => item.id === itemId)
+            ? getLabel(items.find((item) => item.id === itemId)!)
+            : "Select an item..."}
+
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Search for a category..." />
+          <CommandInput placeholder="Search for an item..." />
 
-          <CommandEmpty>No categories found.</CommandEmpty>
+          <CommandEmpty>No items found.</CommandEmpty>
 
           <CommandGroup>
-            {categories.map((category) => (
-              <CommandItem
-                key={category.id + category.description}
-                onSelect={updateSelected}
-              >
+            {items.map((item) => (
+              <CommandItem key={item.id} onSelect={updateSelected}>
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    category.id === categoryId ? "opacity-100" : "opacity-0"
+                    item.id === itemId ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {category.description}
+                {getLabel(item)}
               </CommandItem>
             ))}
           </CommandGroup>
