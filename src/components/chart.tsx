@@ -55,18 +55,26 @@ export function Chart() {
       totals,
     }))
 
+  const weekTotal = data.reduce((p, v) => ({
+    day: "",
+    totals: {
+      amount: p.totals.amount + v.totals.amount,
+      purchases: p.totals.purchases + v.totals.purchases,
+    },
+  })).totals
+
   return (
     <div className="my-4 rounded-md border border-primary bg-primary/5 p-4 shadow-lg">
       <div>
         <p className="text-sm">Week total:</p>
-        <p className="text-xl font-bold">R15,505.50</p>
-        <p className="text-md text-rose-400">+201.5%</p>
+        <p className="text-xl font-bold">R{weekTotal.amount.toFixed(2)}</p>
+        <p className="text-md text-emerald-400">+0.00%</p>
       </div>
 
       <ResponsiveContainer aspect={16 / 9} width="100%" className="">
         <LineChart data={data} className="">
           <Line
-            type="monotone"
+            type="bump"
             dataKey="totals.amount"
             stroke="hsl(var(--primary))"
           />

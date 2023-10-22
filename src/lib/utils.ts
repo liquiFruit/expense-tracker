@@ -5,7 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-import { format, isThisWeek, isToday, isTomorrow, isYesterday } from "date-fns"
+import {
+  differenceInCalendarDays,
+  format,
+  isToday,
+  isTomorrow,
+  isYesterday,
+} from "date-fns"
 
 export function humanDate(date: Date) {
   if (isToday(date)) return "Today"
@@ -14,7 +20,7 @@ export function humanDate(date: Date) {
 
   if (isYesterday(date)) return "Yesterday"
 
-  if (isThisWeek(date)) return format(date, "EEEE")
+  if (differenceInCalendarDays(new Date(), date) < 7) return format(date, "EEE")
 
   return format(date, "P")
 }

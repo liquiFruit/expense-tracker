@@ -21,7 +21,7 @@ export function ExpenseList({
     <section className="my-4 mb-96">
       <Collapsible>
         <CollapsibleTrigger>
-          <h2 className="mb-2">My Expenses</h2>
+          <h2 className="mb-2">Recent Expenses</h2>
         </CollapsibleTrigger>
 
         <CollapsibleContent>
@@ -34,8 +34,9 @@ export function ExpenseList({
               {query.data.expenses
                 .sort(
                   (first, second) =>
-                    first.date.getMilliseconds() - second.date.getMilliseconds()
+                    second.date.getTime() - first.date.getTime()
                 )
+                .slice(0, 3)
                 .map((exp) => (
                   <div
                     key={exp.id}
