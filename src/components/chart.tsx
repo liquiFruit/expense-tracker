@@ -1,7 +1,14 @@
 "use client"
 
 import { useExpenses } from "@/lib/hooks/queries"
-import { format, isBefore, isToday, startOfDay, subDays } from "date-fns"
+import {
+  format,
+  isAfter,
+  isBefore,
+  isToday,
+  startOfDay,
+  subDays,
+} from "date-fns"
 import {
   LineChart,
   Line,
@@ -27,6 +34,7 @@ export function Chart() {
 
   const today = startOfDay(new Date())
   const ONE_WEEK_AGO = subDays(today, 6)
+  const TWO_WEEKS_AGO = subDays(today, 13)
   const totals = new Map<number, { purchases: number; amount: number }>()
 
   for (var i = 0; i < 7; i++) {
@@ -63,12 +71,39 @@ export function Chart() {
     },
   })).totals
 
+  // Reduce last week
+  const lastWeekExpenses = query.data.expenses.filter(
+    (exp) =>
+      isBefore(exp.date, ONE_WEEK_AGO) && isAfter(exp.date, TWO_WEEKS_AGO)
+  )
+
+  const lastWeekTotalAmount =
+    lastWeekExpenses.length === 0
+      ? 0
+      : lastWeekExpenses.reduce((result, entry) => ({
+          ...result,
+          price: result.price + entry.price,
+        })).price
+
+  const weeklyChange =
+    100 *
+    (lastWeekTotalAmount === 0 ? 0 : weekTotal.amount / lastWeekTotalAmount)
+
   return (
     <div className="my-4 rounded-md border border-primary bg-primary/5 p-4 shadow-lg">
       <div>
         <p className="text-sm">Week total:</p>
         <p className="text-xl font-bold">R{weekTotal.amount.toFixed(2)}</p>
-        <p className="text-md text-emerald-400">+0.00%</p>
+
+        {weeklyChange > 0 ? (
+          <p className="text-md text-rose-400">+{weeklyChange.toFixed(2)}%</p>
+        ) : weeklyChange < 0 ? (
+          <p className="text-md text-emerald-400">{weeklyChange.toFixed(2)}%</p>
+        ) : (
+          <p className="text-md text-muted-foreground">
+            {weeklyChange.toFixed(2)}%
+          </p>
+        )}
       </div>
 
       <ResponsiveContainer aspect={16 / 9} width="100%" className="">
