@@ -13,7 +13,11 @@ export default function ExpensesPage() {
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={query.data?.expenses ?? []} />
+      <DataTable
+        isLoading={query.isLoading}
+        columns={columns}
+        data={query.data?.expenses ?? []}
+      />
     </div>
   )
 }

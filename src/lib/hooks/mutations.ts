@@ -16,7 +16,7 @@ export const useDeleteExpense = (expense: Expense) => {
       if (error)
         toast({
           title: "An error occured",
-          description: `Could not delete this expense.`,
+          description: `Could not delete this expense: "${error}"`,
           className: "bg-destructive text-white",
         })
       else {

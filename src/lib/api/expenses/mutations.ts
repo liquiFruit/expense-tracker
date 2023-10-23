@@ -55,6 +55,8 @@ export const updateExpense = async (id: ExpenseId, expense: NewExpense) => {
 }
 
 export const deleteExpense = async (id: ExpenseId) => {
+  console.log(`>> DELETE EXPENSE '${id}' ${Date.now()}`)
+
   // Check if user is authed
   const { session } = await getUserAuth()
   if (!session) return { error: "Unauthorized" }
