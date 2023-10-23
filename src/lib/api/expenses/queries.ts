@@ -12,6 +12,7 @@ export const getExpenses = async () => {
 
 export const getExpensesByUser = async () => {
   console.log(`>> GET USER EXPENSES ${Date.now()}`)
+  await new Promise((res) => setTimeout(res, 2000))
 
   // Check user auth
   const { session } = await getUserAuth()
