@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { useExpenses } from "@/lib/hooks/queries"
+import { LoadingIcon } from "../icons"
 
 const formSchema = insertExpenseSchema
 
@@ -30,7 +31,7 @@ type ExpenseCrudFormProps = {
 }
 
 export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
-  const { refetch } = useExpenses()
+  const { refetch, isRefetching } = useExpenses()
 
   const form = useForm<NewExpense>({
     resolver: zodResolver(formSchema),
@@ -42,6 +43,8 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
   })
 
   async function onSubmit(newExpense: NewExpense) {
+    if (isRefetching) return
+
     const { error } = await createExpense(newExpense)
 
     if (error) {
@@ -146,6 +149,9 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         />
 
         <Button className="w-full" type="submit">
+          {isRefetching ? (
+            <LoadingIcon className="mr-2 text-background" />
+          ) : null}
           Create new expense
         </Button>
       </form>
