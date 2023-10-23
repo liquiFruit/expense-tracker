@@ -87,7 +87,9 @@ export function Chart() {
 
   const weeklyChange =
     100 *
-    (lastWeekTotalAmount === 0 ? 0 : weekTotal.amount / lastWeekTotalAmount)
+    (lastWeekTotalAmount === 0
+      ? 0
+      : (weekTotal.amount - lastWeekTotalAmount) / lastWeekTotalAmount)
 
   return (
     <div className="my-4 rounded-md border border-primary bg-primary/5 p-4 shadow-lg">
