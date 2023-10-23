@@ -19,7 +19,7 @@ export function ExpenseList({
 
   return (
     <section className="my-4 mb-96">
-      <Collapsible>
+      <Collapsible defaultOpen>
         <CollapsibleTrigger>
           <h2 className="mb-2">Recent Expenses</h2>
         </CollapsibleTrigger>
