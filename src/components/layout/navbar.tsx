@@ -40,6 +40,10 @@ export function Navbar() {
               <Link href={"/dashboard"}>Dashboard</Link>
             </Button>
 
+            <Button variant={"outline"} size={"sm"} asChild>
+              <Link href={"/expenses"}>All Expenses</Link>
+            </Button>
+
             <Button
               variant={"destructive"}
               size={"sm"}
