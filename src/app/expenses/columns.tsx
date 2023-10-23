@@ -1,9 +1,21 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontalIcon, Trash2Icon, type LucideIcon } from "lucide-react"
 
 import type { Expense } from "@/lib/db/schema/expenses"
 import { humanDate } from "@/lib/utils"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { useDeleteExpense } from "@/lib/hooks/mutations"
 
 export const columns: ColumnDef<Expense>[] = [
   {
@@ -25,4 +37,28 @@ export const columns: ColumnDef<Expense>[] = [
       </div>
     ),
   },
+
+  {
+    id: "actions",
+    accessorFn: (expense) => expense,
+    cell: ({ row: { original: expense } }) => <ActionMenu expense={expense} />,
+  },
 ]
+
+function ActionMenu({ expense }: { expense: Expense }) {
+  const mutation = useDeleteExpense(expense)
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex w-full justify-center">
+        <MoreHorizontalIcon className="text-muted-foreground" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={() => mutation.mutateAsync()}>
+          <Trash2Icon className="mr-2 text-destructive" size={20} />
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}

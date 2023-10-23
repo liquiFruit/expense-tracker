@@ -55,6 +55,19 @@ export const updateExpense = async (id: ExpenseId, expense: NewExpense) => {
 }
 
 export const deleteExpense = async (id: ExpenseId) => {
+  // Check if user is authed
+  const { session } = await getUserAuth()
+  if (!session) return { error: "Unauthorized" }
+
+  // Check user owns the expense
+  const res = await db.query.expenses.findFirst({
+    where(exp, { eq }) {
+      return eq(exp.userId, session.user.id)
+    },
+  })
+
+  if (!res) return { error: "You are not authorised to mutate this expense" }
+
   // Try delete expense
   try {
     const [exp] = await db
