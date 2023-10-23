@@ -3,8 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontalIcon, Trash2Icon, type LucideIcon } from "lucide-react"
 
-import type { Expense } from "@/lib/db/schema/expenses"
 import { humanDate } from "@/lib/utils"
+import type { Expense } from "@/lib/db/schema/expenses"
+import { useDeleteExpense } from "@/lib/hooks/mutations"
 
 import {
   DropdownMenu,
@@ -12,9 +13,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useDeleteExpense } from "@/lib/hooks/mutations"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export const columns: ColumnDef<Expense>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value: boolean) =>
+          table.toggleAllPageRowsSelected(!!value)
+        }
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+
   {
     accessorKey: "description",
 

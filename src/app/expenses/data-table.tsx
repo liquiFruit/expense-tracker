@@ -20,22 +20,28 @@ import { useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<Expense, TValue> {
+  columns: ColumnDef<Expense, TValue>[]
+  data: Expense[]
   isLoading: boolean
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<Expense, TValue>({
   columns,
   data,
   isLoading,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<Expense, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+  })
+
+  let total = 0
+  table.getSelectedRowModel().rows.forEach(({ original: expense }) => {
+    // @ts-ignore
+    total += expense.price
   })
 
   useEffect(() => table.setPageSize(3), [table])
@@ -143,6 +149,11 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+
+      <div className="my-2 flex flex-row items-center justify-between">
+        <p>Total selected:</p>
+        <p className="font-bold">R{total.toFixed(2)}</p>
       </div>
 
       <div className="flex items-center justify-center space-x-2 py-4">
