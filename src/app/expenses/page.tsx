@@ -12,12 +12,12 @@ export default function ExpensesPage() {
   if (query.error || query.data?.error) return "An error occured"
 
   return (
-    <div className="container mx-auto py-10">
+    <main>
       <DataTable
         isLoading={query.isLoading}
         columns={columns}
         data={query.data?.expenses ?? []}
       />
-    </div>
+    </main>
   )
 }
