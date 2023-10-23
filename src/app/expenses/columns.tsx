@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
 
 export const columns: ColumnDef<Expense>[] = [
   {
@@ -74,8 +75,11 @@ function ActionMenu({ expense }: { expense: Expense }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex w-full justify-center">
-        <MoreHorizontalIcon className="text-muted-foreground" />
+        <Button variant="ghost" size="icon">
+          <MoreHorizontalIcon className="text-muted-foreground" />
+        </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent>
         <DropdownMenuItem onClick={() => mutation.mutateAsync()}>
           <Trash2Icon className="mr-2 text-destructive" size={20} />
