@@ -2,12 +2,15 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { isFuture } from "date-fns"
 
 import { insertExpenseSchema, NewExpense } from "@/lib/db/schema/expenses"
 import { Category } from "@/lib/db/schema/categories"
 import { createExpense } from "@/lib/api/expenses/mutations"
 import { cn } from "@/lib/utils"
+import { useExpenses } from "@/lib/hooks/queries"
+import { useSetExpenses } from "@/lib/hooks/util"
 
 import { ComboBox } from "@/components/ui/combo-box"
 import { DatePicker } from "@/components/date-picker"
@@ -22,10 +25,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
-import { useExpenses } from "@/lib/hooks/queries"
-import { LoadingIcon } from "../icons"
-
-const formSchema = insertExpenseSchema
+import { LoadingIcon } from "@/components/icons"
 
 type ExpenseCrudFormProps = {
   categories: Category[]
@@ -39,20 +39,39 @@ const getInitialState = () => ({
 })
 
 export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
-  const { refetch, isRefetching } = useExpenses()
+  const { status, mutateAsync } = useMutation({
+    mutationKey: ["expenses-crud"],
+    mutationFn: createExpense,
+  })
+  const { data } = useExpenses()
 
   const form = useForm<NewExpense>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(insertExpenseSchema),
     defaultValues: getInitialState(),
   })
 
+  const { setExpenses } = useSetExpenses()
+
   async function onSubmit(newExpense: NewExpense) {
-    if (isRefetching) return
+    if (status === "pending") return
 
-    const { error } = await createExpense(newExpense)
+    const originalExpenses = data?.expenses ?? []
+    setExpenses(
+      originalExpenses.concat([
+        {
+          ...newExpense,
+          userId: "optimistic",
+          date: newExpense.date ?? new Date(),
+          id: -1,
+        },
+      ])
+    )
 
-    if (error) {
+    const { error, expense } = await mutateAsync(newExpense)
+
+    if (error || !expense) {
       toast({ title: "An error occured!", description: error })
+      setExpenses(originalExpenses)
     } else {
       form.reset(getInitialState())
 
@@ -62,7 +81,7 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         className: "bg-primary text-white",
       })
 
-      refetch()
+      setExpenses(originalExpenses.concat([expense]))
     }
   }
 
@@ -160,7 +179,7 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
         />
 
         <Button className="w-full" type="submit">
-          {isRefetching ? (
+          {status === "pending" ? (
             <LoadingIcon className="mr-2 text-background" />
           ) : null}
           Create new expense
