@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { isFuture } from "date-fns"
 
 import { insertExpenseSchema, NewExpense } from "@/lib/db/schema/expenses"
 import { Category } from "@/lib/db/schema/categories"
@@ -80,7 +81,14 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <DatePicker date={field.value} setDate={field.onChange} />
+                  <DatePicker
+                    date={field.value}
+                    setDate={(date) =>
+                      !date || !isFuture(date)
+                        ? field.onChange(date)
+                        : field.onChange(new Date())
+                    }
+                  />
                 </FormControl>
               </FormItem>
             )}
