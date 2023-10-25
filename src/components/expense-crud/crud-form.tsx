@@ -30,16 +30,19 @@ type ExpenseCrudFormProps = {
   categories: Category[]
 }
 
+const getInitialState = () => ({
+  categoryId: -1,
+  description: "",
+  price: 0,
+  date: new Date(),
+})
+
 export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
   const { refetch, isRefetching } = useExpenses()
 
   const form = useForm<NewExpense>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      description: "",
-      price: 0,
-      date: new Date(),
-    },
+    defaultValues: getInitialState(),
   })
 
   async function onSubmit(newExpense: NewExpense) {
@@ -50,7 +53,7 @@ export function ExpenseCrudForm(props: ExpenseCrudFormProps) {
     if (error) {
       toast({ title: "An error occured!", description: error })
     } else {
-      form.reset()
+      form.reset(getInitialState())
 
       toast({
         title: "Success!",
